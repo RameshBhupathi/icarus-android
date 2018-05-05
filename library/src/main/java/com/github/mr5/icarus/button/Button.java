@@ -4,6 +4,9 @@ package com.github.mr5.icarus.button;
 import com.github.mr5.icarus.popover.Popover;
 
 public interface Button {
+    public static final String NAME_UNDO = "undo";
+    public static final String NAME_REDO = "redo";
+
     public static final String NAME_TITLE = "title";
     public static final String NAME_BOLD = "bold";
     public static final String NAME_ITALIC = "italic";
@@ -11,6 +14,7 @@ public interface Button {
     public static final String NAME_STRIKETHROUGH = "strikethrough";
     public static final String NAME_FONT_SCALE = "fontScale";
     public static final String NAME_COLOR = "color";
+    public static final String NAME_BACK_COLOR = "backColor";
     public static final String NAME_OL = "ol";
     public static final String NAME_UL = "ul";
     public static final String NAME_BLOCKQUOTE = "blockquote";

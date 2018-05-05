@@ -27,7 +27,7 @@
     <string name="icon_caret_down">&#xf010;</string>
     <string name="icon_caret_right">&#xf011;</string>
     <string name="icon_upload">&#xf012;</string>
-    <string name="icon_undo">&#xf013;</string>
+
     <string name="icon_smile_o">&#xf014;</string>
     <string name="icon_tint">&#xf015;</string>
     <string name="icon_font">&#xf016;</string>
@@ -39,4 +39,9 @@
     <string name="icon_font_minus">&#xf01c;</string>
     <string name="icon_font_markdown">&#xf01d;</string>
     <string name="icon_checklist">&#xf01e;</string>
+
+    <string name="icon_undo">&#xf013;</string>
+    <string name="icon_redo">&#xe901;</string>
+    <!--<string name="icon_background_color">&#xe903;</string>-->
+    <string name="icon_background_color">&#xf018;</string>
 </resources>

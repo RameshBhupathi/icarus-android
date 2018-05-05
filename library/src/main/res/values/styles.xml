@@ -5,4 +5,10 @@
         <item name="android:layout_height">48dp</item>
         <item name="android:textColor">@color/button_enabled</item>
     </style>
+
+    <style name="PrimaryButton" parent="Theme.AppCompat">
+        <item name="colorButtonNormal">@color/blue</item>
+        <item name="colorControlHighlight">@color/dialogcolor</item>
+    </style>
+
 </resources>

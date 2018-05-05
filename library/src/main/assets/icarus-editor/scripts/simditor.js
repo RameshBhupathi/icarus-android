@@ -14,10 +14,33 @@
   }
 }(this, function ($, SimpleModule, simpleHotkeys, simpleUploader) {
 
-var AlignCenterButton, AlignLeftButton, AlignRightButton, AlignmentButton, BlockquoteButton, BoldButton, Button, Clipboard, CodeButton, CodePopover, ColorButton, FontScaleButton, Formatter, HrButton, HtmlButton, ImageButton, ImagePopover, IndentButton, Indentation, InputManager, ItalicButton, Keystroke, LinkButton, ListButton, OrderListButton, OutdentButton, Popover, Selection, Simditor, SimditorMention, StrikethroughButton, TableButton, TitleButton, Toolbar, UnderlineButton, UndoManager, UnorderListButton, Util,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+var UndoButton,RedoButton,AlignCenterButton, AlignLeftButton, AlignRightButton, AlignmentButton, BlockquoteButton,
+BoldButton, Button, Clipboard, CodeButton, CodePopover, ColorButton,BackgroundColorButton, FontScaleButton, Formatter,
+ HrButton, HtmlButton, ImageButton, ImagePopover, IndentButton, Indentation, InputManager,
+ ItalicButton, Keystroke, LinkButton, ListButton, OrderListButton, OutdentButton, Popover,
+ Selection, Simditor, SimditorMention, StrikethroughButton, TableButton, TitleButton, Toolbar,
+ UnderlineButton, UndoManager, UnorderListButton, Util,
+  extend = function(child, parent) {
+  for (var key in parent) {
+  if (hasProp.call(parent, key))
+  child[key] = parent[key];
+  }
+   function ctor() {
+   this.constructor = child;
+   }
+   ctor.prototype = parent.prototype;
+   child.prototype = new ctor();
+   child.__super__ = parent.prototype;
+   return child;
+   },
   hasProp = {}.hasOwnProperty,
-  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
+  indexOf = [].indexOf || function(item)
+  { for (var i = 0, l = this.length; i < l; i++) {
+  if (i in this && this[i] === item)
+  return i;
+  }
+  return -1;
+  },
   slice = [].slice;
 
 Selection = (function(superClass) {
@@ -467,7 +490,7 @@ Formatter = (function(superClass) {
 
   Formatter.prototype._init = function() {
     this.editor = this._module;
-    this._allowedTags = $.merge(['br', 'span', 'a', 'img', 'b', 'strong', 'i', 'strike', 'u', 'font', 'p', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'h1', 'h2', 'h3', 'h4', 'hr'], this.opts.allowedTags);
+    this._allowedTags = $.merge(['undo','redo','br', 'span', 'a', 'img', 'b', 'strong', 'i', 'strike', 'u', 'font', 'p', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'h1', 'h2', 'h3', 'h4', 'hr'], this.opts.allowedTags);
     this._allowedAttributes = $.extend({
       img: ['src', 'alt', 'width', 'height', 'data-non-image'],
       a: ['href', 'target'],
@@ -1419,6 +1442,7 @@ UndoManager = (function(superClass) {
   };
 
   UndoManager.prototype.undo = function() {
+  console.log("UndoManager - prototype" +this._stack.length+" "+this._index);
     var state;
     if (this._index < 1 || this._stack.length < 2) {
       return;
@@ -1430,6 +1454,7 @@ UndoManager = (function(superClass) {
     this.caretPosition(state.caret);
     this.editor.body.find('.selected').removeClass('selected');
     this.editor.sync();
+      console.log("UndoManager - valuechanged");
     return this.editor.trigger('valuechanged', ['undo']);
   };
 
@@ -1578,7 +1603,6 @@ UndoManager = (function(superClass) {
       return this.editor.selection.range(range);
     }
   };
-
   return UndoManager;
 
 })(SimpleModule);
@@ -1893,7 +1917,7 @@ Toolbar = (function(superClass) {
       return;
     }
     if (!$.isArray(this.opts.toolbar)) {
-      this.opts.toolbar = ['bold', 'italic', 'underline', 'strikethrough', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', '|', 'indent', 'outdent'];
+      this.opts.toolbar = ['undo','redo','bold', 'italic', 'underline', 'strikethrough', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', '|', 'indent', 'outdent'];
     }
     this._render();
     this.list.on('click', function(e) {
@@ -1971,8 +1995,10 @@ Toolbar = (function(superClass) {
     this.wrapper = $(this._tpl.wrapper).prependTo(this.editor.wrapper);
     this.list = this.wrapper.find('ul');
     ref = this.opts.toolbar;
+    console.log("toolbar render");
     for (k = 0, len = ref.length; k < len; k++) {
       name = ref[k];
+          console.log("toolbar btn "+name);
       if (name === '|') {
         $(this._tpl.separator).appendTo(this.list);
         continue;
@@ -2000,13 +2026,20 @@ Toolbar = (function(superClass) {
     if (param == null) {
       param = null;
     }
-    if (!this.buttons[button]) {
-      throw new Error("simditor: invalid toolbar button " + button);
-    }
+        console.log("exec cmd "+button+" "+param);
+
+          for(i in this.buttons){
+           console.log("btn "+i);
+          }
+
+     if (!this.buttons[button]) {
+          throw new Error("simditor: invalid toolbar button " + button);
+        }
     return this.buttons[button].command(param);
   };
 
   Toolbar.addButton = function(btn) {
+        console.log("add button "+btn.prototype.name);
     return this.buttons[btn.prototype.name] = btn;
   };
 
@@ -2563,6 +2596,7 @@ Simditor = (function(superClass) {
       ref = this.opts.params;
       results = [];
       for (key in ref) {
+      console.log("Simeditor "+key)
         val = ref[key];
         results.push($('<input/>', {
           type: 'hidden',
@@ -2712,6 +2746,8 @@ Simditor.i18n = {
   'zh-CN': {
     'blockquote': '引用',
     'bold': '加粗文字',
+    'undo': '解开',
+    'redo': '重做',
     'code': '插入代码',
     'color': '文字颜色',
     'coloredText': '彩色文字',
@@ -2764,6 +2800,8 @@ Simditor.i18n = {
   },
   'en-US': {
     'blockquote': 'Block Quote',
+    'undo': 'Undo',
+    'redo': 'Redo',
     'bold': 'Bold',
     'code': 'Code',
     'color': 'Text Color',
@@ -3650,10 +3688,12 @@ FontScaleButton = (function(superClass) {
 
   FontScaleButton.prototype.command = function(param) {
     var $scales, containerNode, range;
+        console.log('params '+param);
     range = this.editor.selection.range();
     if (range.collapsed) {
       return;
     }
+            console.log('fontSize false '+param);
     document.execCommand('styleWithCSS', false, true);
     document.execCommand('fontSize', false, param);
     document.execCommand('styleWithCSS', false, false);
@@ -3734,6 +3774,101 @@ BoldButton = (function(superClass) {
 
 Simditor.Toolbar.addButton(BoldButton);
 
+RedoButton = (function(superClass) {
+  extend(RedoButton, superClass);
+
+  function RedoButton() {
+    return RedoButton.__super__.constructor.apply(this, arguments);
+  }
+
+  RedoButton.prototype.name = 'redo';
+
+  RedoButton.prototype.icon = 'redo';
+
+  RedoButton.prototype.htmlTag = 'redo';
+
+  RedoButton.prototype.disableTag = 'pre';
+
+  RedoButton.prototype.shortcut = 'shift+cmd+z';
+
+  RedoButton.prototype._init = function() {
+    if (this.editor.util.os.mac) {
+      this.title = this.title + ' ( shift + cmd + z )';
+    } else {
+      this.title = this.title + ' ( shift + ctrl + z )';
+      this.shortcut = 'shift+ctrl+z';
+    }
+    return RedoButton.__super__._init.call(this);
+  };
+
+  RedoButton.prototype._activeStatus = function() {
+    var active;
+    active = document.queryCommandState('redo') === true;
+    this.setActive(active);
+    return this.active;
+  };
+
+  RedoButton.prototype.command = function() {
+    document.execCommand('redo');
+    if (!this.editor.util.support.oninput) {
+      this.editor.trigger('valuechanged');
+    }
+    return $(document).trigger('selectionchange');
+  };
+  return RedoButton;
+
+})(Button);
+
+Simditor.Toolbar.addButton(RedoButton);
+
+UndoButton = (function(superClass) {
+  extend(UndoButton, superClass);
+
+  function UndoButton() {
+    return UndoButton.__super__.constructor.apply(this, arguments);
+  }
+
+  UndoButton.prototype.name = 'undo';
+
+  UndoButton.prototype.icon = 'undo';
+
+  UndoButton.prototype.htmlTag = 'undo';
+
+  UndoButton.prototype.disableTag = 'pre';
+
+  UndoButton.prototype.shortcut = 'cmd+z';
+
+  UndoButton.prototype._init = function() {
+    if (this.editor.util.os.mac) {
+      this.title = this.title + ' ( Cmd + z )';
+    } else {
+      this.title = this.title + ' ( Ctrl + z )';
+      this.shortcut = 'ctrl+z';
+    }
+    return UndoButton.__super__._init.call(this);
+  };
+
+  UndoButton.prototype._activeStatus = function() {
+    var active;
+    active = document.queryCommandState('undo') === true;
+    this.setActive(active);
+    return this.active;
+  };
+
+  UndoButton.prototype.command = function() {
+  console.log("undo")
+    document.execCommand('undo');
+       if (!this.editor.util.support.oninput) {
+         this.editor.trigger('valuechanged');
+       }
+       return $(document).trigger('selectionchange');
+     };
+  return UndoButton;
+
+})(Button);
+
+Simditor.Toolbar.addButton(UndoButton);
+
 ItalicButton = (function(superClass) {
   extend(ItalicButton, superClass);
 
@@ -3770,6 +3905,7 @@ ItalicButton = (function(superClass) {
 
   ItalicButton.prototype.command = function() {
     document.execCommand('italic');
+    console.log('italic loaded');
     if (!this.editor.util.support.oninput) {
       this.editor.trigger('valuechanged');
     }
@@ -3851,6 +3987,9 @@ ColorButton = (function(superClass) {
     return ColorButton.__super__.render.apply(this, args);
   };
 
+
+
+
   ColorButton.prototype.renderMenu = function() {
     $('<ul class="color-list">\n  <li><a href="javascript:;" class="font-color font-color-1"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-2"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-3"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-4"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-5"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-6"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-7"></a></li>\n  <li><a href="javascript:;" class="font-color font-color-default"></a></li>\n</ul>').appendTo(this.menuWrapper);
     this.menuWrapper.on('mousedown', '.color-list', function(e) {
@@ -3885,6 +4024,7 @@ ColorButton = (function(superClass) {
         document.execCommand('styleWithCSS', false, true);
         document.execCommand('foreColor', false, hex);
         document.execCommand('styleWithCSS', false, false);
+            console.log('foreColor '+hex);
         if (!_this.editor.util.support.oninput) {
           return _this.editor.trigger('valuechanged');
         }
@@ -3915,11 +4055,56 @@ ColorButton = (function(superClass) {
     return rgbToHex(match[1] * 1, match[2] * 1, match[3] * 1);
   };
 
+
+  ColorButton.prototype.command = function(param) {
+    console.log('foreColor '+param);
+     document.execCommand('styleWithCSS', false, true);
+     document.execCommand('foreColor', false, param);
+     document.execCommand('styleWithCSS', false, false);
+      return this.editor.trigger('valuechanged');
+    };
+
   return ColorButton;
 
 })(Button);
 
 Simditor.Toolbar.addButton(ColorButton);
+
+
+
+BackgroundColorButton = (function(superClass) {
+  extend(BackgroundColorButton, superClass);
+
+  function BackgroundColorButton() {
+    return BackgroundColorButton.__super__.constructor.apply(this, arguments);
+  }
+
+  BackgroundColorButton.prototype.name = 'backColor';
+
+
+  BackgroundColorButton.prototype.htmlTag = 'backColor';
+
+  BackgroundColorButton.prototype.disableTag = 'pre';
+
+  BackgroundColorButton.prototype._activeStatus = function() {
+    var active;
+    active = document.queryCommandState('backColor') === true;
+    this.setActive(active);
+    return this.active;
+  };
+
+  BackgroundColorButton.prototype.command = function(param) {
+ console.log("backColor")
+   document.execCommand('styleWithCSS', false, true);
+   document.execCommand('backColor', false, param);
+   document.execCommand('styleWithCSS', false, false);
+   return this.editor.trigger('valuechanged');
+   };
+  return BackgroundColorButton;
+
+})(Button);
+
+Simditor.Toolbar.addButton(BackgroundColorButton);
 
 ListButton = (function(superClass) {
   extend(ListButton, superClass);
