@@ -26,6 +26,16 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/button_undo"
+                style="@style/EditorIcon"
+                android:text="@string/icon_undo" />
+
+            <TextView
+                android:id="@+id/button_redo"
+                style="@style/EditorIcon"
+                android:text="@string/icon_redo" />
+
+            <TextView
                 android:id="@+id/button_bold"
                 style="@style/EditorIcon"
                 android:text="@string/icon_bold" />
@@ -114,6 +124,15 @@
                 android:id="@+id/button_html5"
                 style="@style/EditorIcon"
                 android:text="@string/icon_html5" />
+            <TextView
+                android:id="@+id/button_color"
+                style="@style/EditorIcon"
+                android:text="@string/icon_tint" />
+
+            <TextView
+                android:id="@+id/button_background_color"
+                style="@style/EditorIcon"
+                android:text="@string/icon_background_color" />
         </LinearLayout>
     </HorizontalScrollView>
 </LinearLayout>

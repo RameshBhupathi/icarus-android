@@ -1,8 +1,8 @@
 package com.github.mr5.samples.icarus;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +13,13 @@ import com.github.mr5.icarus.Callback;
 import com.github.mr5.icarus.Icarus;
 import com.github.mr5.icarus.TextViewToolbar;
 import com.github.mr5.icarus.Toolbar;
+import com.github.mr5.icarus.button.BackgroundColorButton;
 import com.github.mr5.icarus.button.Button;
+import com.github.mr5.icarus.button.ColorButton;
 import com.github.mr5.icarus.button.FontScaleButton;
 import com.github.mr5.icarus.button.TextViewButton;
 import com.github.mr5.icarus.entity.Options;
+import com.github.mr5.icarus.popover.ColorPickerPopoverImpl;
 import com.github.mr5.icarus.popover.FontScalePopoverImpl;
 import com.github.mr5.icarus.popover.HtmlPopoverImpl;
 import com.github.mr5.icarus.popover.ImagePopoverImpl;
@@ -24,10 +27,9 @@ import com.github.mr5.icarus.popover.LinkPopoverImpl;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
     WebView webView;
 
     protected Icarus icarus;
@@ -54,8 +56,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private Toolbar prepareToolbar(TextViewToolbar toolbar, Icarus icarus) {
-        Typeface iconfont = Typeface.createFromAsset(getAssets(), "Simditor.ttf");
+        Typeface iconfont = Typeface.createFromAsset(getAssets(), "icomoon.ttf");
         HashMap<String, Integer> generalButtons = new HashMap<>();
+
+        generalButtons.put(Button.NAME_UNDO, R.id.button_undo);
+        generalButtons.put(Button.NAME_REDO, R.id.button_redo);
+
         generalButtons.put(Button.NAME_BOLD, R.id.button_bold);
         generalButtons.put(Button.NAME_OL, R.id.button_list_ol);
         generalButtons.put(Button.NAME_BLOCKQUOTE, R.id.button_blockquote);
@@ -107,6 +113,20 @@ public class MainActivity extends ActionBarActivity {
         TextViewButton fontScaleButton = new FontScaleButton(fontScaleTextView, icarus);
         fontScaleButton.setPopover(new FontScalePopoverImpl(fontScaleTextView, icarus));
         toolbar.addButton(fontScaleButton);
+
+
+        TextView colorTextView = (TextView) findViewById(R.id.button_color);
+        colorTextView.setTypeface(iconfont);
+        ColorButton colorButton = new ColorButton(colorTextView, icarus);
+        colorButton.setPopover(new ColorPickerPopoverImpl(colorTextView, icarus,Button.NAME_COLOR));
+        toolbar.addButton(colorButton);
+
+        TextView backgroundColorTv = (TextView) findViewById(R.id.button_background_color);
+        backgroundColorTv.setTypeface(iconfont);
+        BackgroundColorButton backGroundColorButton = new BackgroundColorButton(backgroundColorTv, icarus);
+        backGroundColorButton.setPopover(new ColorPickerPopoverImpl(backgroundColorTv, icarus,Button.NAME_BACK_COLOR));
+        toolbar.addButton(backGroundColorButton);
+
         return toolbar;
     }
 
